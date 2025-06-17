@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- ============================== -->
+<!-- 📄 MainPage.xaml (Workout Log) -->
+<!-- Purpose: Log and review workouts -->
+<!-- ============================== -->
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiApp1"
+    xmlns:converters="clr-namespace:MauiApp1.Converters"
+    x:Class="MauiApp1.MainPage"
+    x:Name="ThisPage"
+    Title="Workout Log">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Converter to hide workout list when empty -->
+            <converters:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- Enable scrolling in case form gets long -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Section Title -->
+            <Label Text="Add Workout"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Form Inputs: bind to ViewModel properties -->
+            <Label Text="Type" FontAttributes="Bold" />
+            <Entry Placeholder="e.g. Running"
+                   Text="{Binding Type}" />
+
+            <Label Text="Duration (min)" FontAttributes="Bold" />
+            <Entry Keyboard="Numeric"
+                   Text="{Binding Duration}" />
+
+            <Label Text="Calories" FontAttributes="Bold" />
+            <Entry Keyboard="Numeric"
+                   Text="{Binding Calories}" />
+
+            <Label Text="Intensity" FontAttributes="Bold" />
+            <Entry Placeholder="e.g. Light/Moderate/Intense"
+                   Text="{Binding Intensity}" />
+
+            <!-- Toggle for daily recurring workouts -->
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                <CheckBox IsChecked="{Binding IsRecurring}" />
+                <Label Text="Recurring daily" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- TimePicker for optional reminder -->
+            <Label Text="Reminder Time" FontAttributes="Bold" />
+            <TimePicker Time="{Binding ReminderTime}" />
+
+            <!-- Add button triggers AddWorkoutCommand in ViewModel -->
+            <Button Text="Add Workout"
+                    Command="{Binding AddWorkoutCommand}"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HorizontalOptions="Fill" />
+
+            <!-- Divider -->
+            <BoxView Color="#CCCCCC" HeightRequest="1" />
+
+            <!-- Workout log header -->
+            <Label Text="Workout Log:"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding Workouts.Count, Converter={StaticResource GreaterThanZeroConverter}}" />
+
+            <!-- Display each workout entry -->
+            <CollectionView ItemsSource="{Binding Workouts}"
+                            SelectionMode="None"
+                            IsVisible="{Binding Workouts.Count, Converter={StaticResource GreaterThanZeroConverter}}"
+                            Margin="0,5,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10"
+                               Margin="0,5"
+                               CornerRadius="8"
+                               BackgroundColor="White"
+                               HasShadow="True">
+                            <Grid>
+                                <!-- Layout: 2 columns, details on left, delete button on right -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Workout Details -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                    <Label Text="{Binding Type}" FontAttributes="Bold" />
+                                    <Label Text="{Binding DurationMinutes, StringFormat='Duration: {0} min'}" />
+                                    <Label Text="{Binding CaloriesBurned, StringFormat='Calories: {0}'}" />
+                                    <Label Text="{Binding Intensity, StringFormat='Intensity: {0}'}" />
+                                    <Label Text="{Binding IsRecurring, StringFormat='Recurring: {0}'}" />
+                                    <Label Text="{Binding ReminderTime, StringFormat='Reminder: {0:hh\:mm}'}" />
+                                    <Label Text="{Binding Date, StringFormat='Logged: {0:MM/dd/yyyy hh:mm tt}'}"
+                                           FontSize="12"
+                                           TextColor="#666" />
+                                </VerticalStackLayout>
+
+                                <!-- Delete Button -->
+                                <Button Text="🗑️"
+                                        Grid.Column="1"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding BindingContext.DeleteWorkoutCommand, Source={x:Reference ThisPage}}"
+                                        CommandParameter="{Binding}" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ============================= -->
+<!-- 📄 DietaryPage.xaml          -->
+<!-- Purpose: Tracks food intake  -->
+<!-- ============================= -->
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiApp1"
+    x:Class="MauiApp1.DietaryPage"
+    x:Name="DietPage"
+    Title="Diet">
+
+    <!-- ScrollView ensures the form is scrollable on small screens -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <!-- Form Header -->
+            <Label Text="Add Food Entry" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <!-- Form Inputs: Bound to DietaryViewModel -->
+            <Label Text="Description" />
+            <Entry Text="{Binding Description}" Placeholder="e.g. Chicken Salad" />
+
+            <Label Text="Calories" />
+            <Entry Keyboard="Numeric" Text="{Binding Calories}" />
+
+            <Label Text="Protein (g)" />
+            <Entry Keyboard="Numeric" Text="{Binding Protein}" />
+
+            <Label Text="Carbs (g)" />
+            <Entry Keyboard="Numeric" Text="{Binding Carbs}" />
+
+            <Label Text="Fats (g)" />
+            <Entry Keyboard="Numeric" Text="{Binding Fats}" />
+
+            <!-- Add Food Button: triggers AddFoodCommand in the ViewModel -->
+            <Button Text="Add Food"
+                    Command="{Binding AddFoodCommand}"
+                    BackgroundColor="#009688"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HorizontalOptions="Fill" />
+
+            <!-- Horizontal divider -->
+            <BoxView Color="#CCCCCC" HeightRequest="1" />
+
+            <!-- Total Calories Summary -->
+            <Label Text="{Binding TotalCaloriesToday, StringFormat='Total Calories Today: {0}'}"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding FoodLog.Count, Converter={StaticResource GreaterThanZeroConverter}}" />
+
+            <!-- List of logged food entries -->
+            <CollectionView ItemsSource="{Binding FoodLog}"
+                            SelectionMode="None"
+                            IsVisible="{Binding FoodLog.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5" CornerRadius="8" BackgroundColor="White" HasShadow="True">
+                            <VerticalStackLayout Spacing="4">
+
+                                <!-- Tap Area: toggles expanded nutritional info -->
+                                <StackLayout>
+                                    <StackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.ToggleNutritionCommand, Source={x:Reference DietPage}}"
+                                            CommandParameter="{Binding}" />
+                                    </StackLayout.GestureRecognizers>
+
+                                    <Label Text="{Binding Description}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Calories, StringFormat='Calories: {0}'}" />
+                                </StackLayout>
+
+                                <!-- Extra nutrition info: only visible when IsExpanded is true -->
+                                <StackLayout IsVisible="{Binding IsExpanded}">
+                                    <Label Text="{Binding Protein, StringFormat='Protein: {0}g'}" />
+                                    <Label Text="{Binding Carbs, StringFormat='Carbs: {0}g'}" />
+                                    <Label Text="{Binding Fats, StringFormat='Fats: {0}g'}" />
+                                </StackLayout>
+
+                                <!-- Date and time logged -->
+                                <Label Text="{Binding Date, StringFormat='Date: {0:MM/dd/yyyy HH:mm}'}"
+                                       FontSize="12"
+                                       TextColor="#666" />
+
+                                <!-- Delete Button: removes food entry -->
+                                <Button Text="Delete"
+                                        BackgroundColor="#E91E63"
+                                        TextColor="White"
+                                        CornerRadius="6"
+                                        Command="{Binding BindingContext.DeleteFoodCommand, Source={x:Reference DietPage}}"
+                                        CommandParameter="{Binding}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

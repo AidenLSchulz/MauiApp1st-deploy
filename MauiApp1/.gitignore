@@ -1,0 +1,16 @@
+﻿# Ignore build output
+bin/
+obj/
+.vs/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# MAUI-specific
+*.nupkg
+*.apk
+*.app
+*.aab

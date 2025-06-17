@@ -1,0 +1,29 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiApp1"
+    xmlns:converters="clr-namespace:MauiApp1.Converters"
+    x:Class="MauiApp1.App">
+
+    <Application.Resources>
+        <!-- Application-wide resources go here -->
+
+        <ResourceDictionary>
+            <!-- 🔁 This is where we register converters or styles that should be available app-wide -->
+
+            <!-- 🔄 Converts null to false for data bindings, used in buttons, visibility, etc -->
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+
+
+            <!-- 📦 Merge other resource files like color definitions and stylesheets -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 🖍️ Colors.xaml defines app color palette -->
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+
+                <!-- 🎨 Styles.xaml defines shared control styles like font, spacing, etc -->
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiApp1"
+    x:Class="MauiApp1.AppShell">
+
+    <!-- 🧭 AppShell sets up your app’s top-level navigation structure.
+         Each <FlyoutItem> creates a menu tab in the hamburger menu (flyout). -->
+
+    <!-- 🏋️‍♂️ Workouts page in the fly-out menu -->
+    <FlyoutItem Title="Workouts" Icon="workout_icon.png">
+        <!-- The MainPage.xaml is used here for logging workouts -->
+        <ShellContent Title="Log"
+                      ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <!-- 🍽️ Dietary Tracker page -->
+    <FlyoutItem Title="Diet" Icon="diet_icon.png">
+        <!-- Links to DietaryPage.xaml -->
+        <ShellContent Title="Log"
+                      ContentTemplate="{DataTemplate local:DietaryPage}" />
+    </FlyoutItem>
+
+    <!-- 🎯 Goals tracking page -->
+    <FlyoutItem Title="Goals" Icon="goals_icon.png">
+        <!-- Links to GoalsPage.xaml -->
+        <ShellContent Title="Progress"
+                      ContentTemplate="{DataTemplate local:GoalsPage}" />
+    </FlyoutItem>
+
+</Shell>

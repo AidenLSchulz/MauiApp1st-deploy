@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- =========================== -->
+<!-- 📄 GoalsPage.xaml          -->
+<!-- Purpose: Track user goals   -->
+<!-- =========================== -->
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiApp1"
+    xmlns:converters="clr-namespace:MauiApp1.Converters"
+
+    x:Class="MauiApp1.GoalsPage"
+    x:Name="ThisGoalsPage"
+    Title="Fitness Goals">
+
+    <!-- Global resources used in this page (converters, etc.) -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Converter to check if Goals.Count > 0 -->
+            <converters:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- Wrap everything in a ScrollView so it's scrollable -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Form Title -->
+            <Label Text="Set a New Goal"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Input fields: these bind to the GoalsViewModel -->
+            <Label Text="Description" FontAttributes="Bold" />
+            <Entry Text="{Binding Description}" Placeholder="e.g. Lose 5 lbs" />
+
+            <Label Text="Target Value" FontAttributes="Bold" />
+            <Entry Text="{Binding TargetValue}" Keyboard="Numeric" Placeholder="e.g. 5 (how many lbs/reps)" />
+
+            <Label Text="Unit (lbs, reps…)" FontAttributes="Bold" />
+            <Entry Text="{Binding Unit}" Placeholder="e.g. lbs" />
+
+            <!-- Button to add a new goal -->
+            <Button Text="Add Goal"
+                    Command="{Binding AddGoalCommand}"
+                    BackgroundColor="#FF5722"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HorizontalOptions="Fill" />
+
+            <!-- Divider line -->
+            <BoxView Color="#CCCCCC" HeightRequest="1" />
+
+            <!-- Header for the list of goals -->
+            <Label Text="Your Goals"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding Goals.Count, Converter={StaticResource GreaterThanZeroConverter}}" />
+
+            <!-- CollectionView: shows the list of current goals -->
+            <CollectionView
+                ItemsSource="{Binding Goals}"
+                SelectionMode="None"
+                IsVisible="{Binding Goals.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!-- Swipe to reveal delete button -->
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <!-- Red delete swipe action -->
+                                    <SwipeItem
+                                        Text="Delete"
+                                        BackgroundColor="Red"
+                                        Command="{Binding BindingContext.DeleteGoalCommand, Source={x:Reference ThisGoalsPage}}"
+                                        CommandParameter="{Binding}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <!-- Card-style goal display -->
+                            <Frame Padding="10"
+                                   Margin="0,5"
+                                   CornerRadius="8"
+                                   BackgroundColor="White"
+                                   HasShadow="True">
+
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- Goal title -->
+                                    <Label Text="{Binding Description}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
+
+                                    <!-- Visual progress bar -->
+                                    <ProgressBar Progress="{Binding ProgressRatio}" />
+
+                                    <!-- Progress numbers -->
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Label Text="{Binding CurrentValue}" />
+                                        <Label Text="/" />
+                                        <Label Text="{Binding TargetValue}" />
+                                        <Label Text="{Binding Unit}" />
+                                    </HorizontalStackLayout>
+
+                                    <!-- + and - buttons to update progress -->
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Button Text="–"
+                                                FontSize="24"
+                                                WidthRequest="48"
+                                                Command="{Binding BindingContext.DecreaseProgressCmd, Source={x:Reference ThisGoalsPage}}"
+                                                CommandParameter="{Binding}" />
+
+                                        <Button Text="+"
+                                                FontSize="24"
+                                                WidthRequest="48"
+                                                Command="{Binding BindingContext.IncreaseProgressCmd, Source={x:Reference ThisGoalsPage}}"
+                                                CommandParameter="{Binding}" />
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
